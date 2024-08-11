@@ -1,6 +1,7 @@
 local M = {}
 
 local https = require("ssl.https")
+local cjson = require("cjson")
 
 local search_endpoint = "https://tenor.googleapis.com/v2/search?"
 local API_KEY = nil
@@ -50,6 +51,23 @@ local function addMediaFilter(types, params)
 		params["media_filter"] = s
 	else
 		error("Media filter not a string or table")
+	end
+end
+
+---Does a request at endpoint with parameters
+---@param endpoint string
+---@param params table<string, string|integer>
+---@return table
+local function request(endpoint, params)
+	addAPIToTable(params)
+	local paramString = buildParams(params)
+	local url = endpoint .. paramString
+
+	local res, code, headers, status = https.request(url)
+	if code == 200 then
+		return cjson.decode(res)
+	else
+		error(("Request didn’t work, error code : %d"):format(code))
 	end
 end
 

@@ -6,6 +6,16 @@ local cjson = require("cjson")
 local search_endpoint = "https://tenor.googleapis.com/v2/search?"
 local API_KEY = nil
 
+--- Enum like table for the various possible sizes
+---@enum MediaFormat
+MediaFormat = {
+	PREVIEW = "preview",
+	TINY = "tinygif",
+	NORMAL = "gif",
+	TINYMP4 = "tinymp4",
+	MP4 = "mp4",
+}
+
 ---Sets the global API key
 ---Should be used before any other calls
 ---@param apiKey string
@@ -69,6 +79,32 @@ local function request(endpoint, params)
 	else
 		error(("Request didn’t work, error code : %d"):format(code))
 	end
+end
+
+---@class MediaObject
+---@field url string
+
+---@class Result The result returned by the API from a search call
+---@field content_description string
+---@field media_formats table<MediaFormat, MediaObject>
+
+---Searches GIFs
+---@param term string The term to search
+---@param sizes MediaFormat[] Formats requested
+---@param limit? integer The number of searchs (default : 10)
+---@return Result[]
+function M.search(term, sizes, limit)
+	-- Default of limit is 10
+	limit = limit or 10
+
+	-- Setup the parameters
+	local params = { q = term, limit = limit }
+	addMediaFilter(sizes, params)
+
+	-- Do the request
+	local response = request(search_endpoint, params)
+	-- Return the result
+	return response.results
 end
 
 return M

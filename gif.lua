@@ -6,6 +6,10 @@ local cjson = require("cjson")
 local search_endpoint = "https://tenor.googleapis.com/v2/search?"
 local API_KEY = nil
 
+---Last "next" field, used to continue search
+local last_next = ""
+local last_params = {}
+
 --- Enum like table for the various possible sizes
 ---@enum MediaFormat
 MediaFormat = {
@@ -103,7 +107,30 @@ function M.search(term, sizes, limit)
 
 	-- Do the request
 	local response = request(search_endpoint, params)
+	-- Save the parameters to allow continue
+	last_next = response.next
+	last_params = params
 	-- Return the result
+	return response.results
+end
+
+---Continue last search
+---@param sizes? MediaFormat[] Formats requested (defaults to the same as before)
+---@param limit? integer The numer of searchs (defaults to the same as before)
+---@return Result[]
+function M.nextResults(sizes, limit)
+	local params = last_params
+	if sizes ~= nil then
+		addMediaFilter(sizes, params)
+	end
+	if limit ~= nil then
+		params.limit = limit
+	end
+	params.pos = last_next
+
+	local response = request(search_endpoint, params)
+	last_next = response.next
+	last_params = params
 	return response.results
 end
 

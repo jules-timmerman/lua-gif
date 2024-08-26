@@ -1,3 +1,5 @@
+--- Module to fetch GIFs from online
+-- @module lua_gif
 local M = {}
 
 local https = require("ssl.https")
@@ -85,10 +87,12 @@ local function request(endpoint, params)
 	end
 end
 
+--- A media (GIF, MP4...) returned by the API
 ---@class MediaObject
 ---@field url string
 
----@class Result The result returned by the API from a search call
+---The result returned by the API from a search call
+---@class Result
 ---@field content_description string
 ---@field media_formats table<MediaFormat, MediaObject>
 

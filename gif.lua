@@ -14,7 +14,7 @@ local last_params = {}
 
 --- Enum like table for the various possible sizes
 ---@enum MediaFormat
-MediaFormat = {
+M.MediaFormat = {
 	PREVIEW = "preview",
 	TINY = "tinygif",
 	NORMAL = "gif",

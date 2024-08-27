@@ -4,6 +4,7 @@ local M = {}
 
 local https = require("ssl.https")
 local cjson = require("cjson")
+local url = require("socket.url")
 
 local search_endpoint = "https://tenor.googleapis.com/v2/search?"
 local API_KEY = nil
@@ -36,7 +37,8 @@ end
 local function buildParams(t)
 	local s = ""
 	for key, value in pairs(t) do
-		local pairString = key .. "=" .. value
+		local escaped_value = url.escape(value)
+		local pairString = key .. "=" .. escaped_value
 		s = s .. pairString .. "&"
 	end
 	return s
@@ -77,9 +79,9 @@ end
 local function request(endpoint, params)
 	addAPIToTable(params)
 	local paramString = buildParams(params)
-	local url = endpoint .. paramString
+	local url_str = endpoint .. paramString
 
-	local res, code, headers, status = https.request(url)
+	local res, code, headers, status = https.request(url_str)
 	if code == 200 then
 		return cjson.decode(res)
 	else

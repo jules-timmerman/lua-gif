@@ -11,6 +11,11 @@ This simple module uses Tenor API to search GIFs in Lua
 	homepage = "https://github.com/jules-timmerman/lua-gif",
 	license = "MIT",
 }
+dependencies = {
+	"lua >= 5.1",
+	"luasec",
+	"lua-cjson",
+}
 build = {
 	type = "builtin",
 	modules = {

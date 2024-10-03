@@ -1,7 +1,7 @@
 package = "lua-gif"
 version = "dev-1"
 source = {
-	url = "git+ssh://git@github.com/jules-timmerman/lua-gif.git",
+	url = "https://github.com/jules-timmerman/lua-gif.git",
 }
 description = {
 	summary = "This simple module uses Tenor API to search GIFs in Lua",
